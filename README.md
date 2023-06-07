@@ -1,7 +1,4 @@
-# Url Shortener
-
-Use this button for one-click
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAnshuman71%2Furl-shotener)
+# Url Shortener KK
 
 ## Set up environment
 ```
