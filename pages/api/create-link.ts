@@ -2,15 +2,24 @@ import { NextApiRequest, NextApiResponse } from "next";
 import connectToDatabase from "../../mongodb";
 import { customAlphabet } from "nanoid";
 import { COLLECTION_NAMES } from "../../types";
+import Cors from 'cors'
 
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const getHash = customAlphabet(characters, 4);
 
+// Inicjalizacja middleware CORS
+const cors = Cors({
+  methods: ['GET', 'POST'],
+});
+
 export default async function CreateLink(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  // Wywołanie middleware CORS
+  await cors(request, response, error => {console.log(error);});
+
   const apiKey = request.headers["api-key"] as string;
   if (request.method !== "POST") {
     return response.status(405).json({
