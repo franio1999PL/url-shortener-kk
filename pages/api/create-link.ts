@@ -18,7 +18,7 @@ export default async function CreateLink(
   response: NextApiResponse
 ) {
   // Wywołanie middleware CORS
-  await cors(request, response, error => {console.log(error);});
+  await cors(request, response, error => {console.log("error:", error);});
 
   const apiKey = request.headers["api-key"] as string;
   if (request.method !== "POST") {
