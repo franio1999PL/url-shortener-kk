@@ -83,6 +83,7 @@ export default async function CreateLink(
         link,
       },
     });
+    await prisma.$disconnect()
   } catch (e: any) {
     console.log(e);
     response.status(500);

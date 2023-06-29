@@ -9,7 +9,7 @@ export async function getServerSideProps (request: NextApiRequest) {
   const hash = request.query.hash as string
   const database = await prisma.shortUrl
   const campaign = await database.findUnique({ where: { uid: hash } })
-
+  await prisma.$disconnect()
   console.log(campaign)
 
   if (campaign) {
