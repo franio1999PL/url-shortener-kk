@@ -4,6 +4,10 @@ import { customAlphabet } from "nanoid";
 import { COLLECTION_NAMES } from "../../types";
 import Cors from 'cors'
 
+import {PrismaClient} from '@prisma/client'
+
+const prisma = new PrismaClient()
+
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const getHash = customAlphabet(characters, 4);
@@ -37,6 +41,10 @@ export default async function CreateLink(
   }
   const { link } = request.body;
 
+
+  console.log("link",link);
+  
+
   if (!link) {
     response.status(400).send({
       type: "Error",
@@ -46,19 +54,24 @@ export default async function CreateLink(
     return;
   }
   try {
-    const database = await connectToDatabase();
-    const urlInfoCollection = database.collection(COLLECTION_NAMES["url-info"]);
+    // const database = await connectToDatabase();
+    const database = await prisma.shortUrl
+  
     const hash = getHash();
-    const linkExists = await urlInfoCollection.findOne({
-      link,
+    const linkExists = await database.findUnique({
+      where: {
+        link
+      }
     });
     const shortUrl = `${process.env.HOST}/${hash}`;
+    console.log(linkExists);
     if (!linkExists) {
-      await urlInfoCollection.insertOne({
-        link,
+      await database.create({
+       data:{
+        link: link,
         uid: hash,
         shortUrl: shortUrl,
-        createdAt: new Date(),
+       }
       });
     }
     response.status(201);
@@ -71,6 +84,7 @@ export default async function CreateLink(
       },
     });
   } catch (e: any) {
+    console.log(e);
     response.status(500);
     response.send({
       code: 500,
